@@ -68,8 +68,15 @@ export class UsersService {
     await this.users.delete(id);
   }
 
+  // ---- New in 2.4 ----
+  async setAvatar(id, avatar) {
+    await this.getById(id);
+    return toPublicUser(await this.users.update(id, { avatar }));
+  }
+
   async #assertEmailAvailable(email, exceptId) {
     const existing = await this.users.findByEmail(email);
     if (existing && existing.id !== exceptId) throw conflict(`Email ${email} is already registered`);
   }
 }
+
